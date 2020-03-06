@@ -86,7 +86,38 @@ public class AccesoBBDD extends Conexion {
 		//Desconectamos
 		desconectarCliente();
 	}
+
+	public void insertarDocumentoConArray(Producto p, List precios) throws UnknownHostException {
+		//Declaramos variables
+		BasicDBObject documentoSimple = new BasicDBObject();
+		
+		//Conectamos al cliente, y obtenemos la db
+		conectarCliente();
+		
+		//Si no existe la coleccion en la db, se crea la colleción
+		collection = db.getCollection("productos");
+		
+		//Asignar valores al documento
+		documentoSimple.put("_id", (int)collection.count());
+		documentoSimple.put("nombre", p.getNombre());
+		documentoSimple.put("cantidad", p.getCantidad());
+		documentoSimple.put("precio", p.getPrecio());
+		//Añadimos el List
+		documentoSimple.put("precios", precios);	
+		
+		//Insertar el documento en la coleción		
+		WriteResult resultado = null;
+		try {
+			resultado = collection.insert(documentoSimple);
+		} catch (Exception e) {
+			System.out.println("Error: " + e.toString());
+			System.out.println("Resultado toString(): " + resultado.toString());			
+		}
+
 	
+		//Desconectamos
+		desconectarCliente();
+	}
 	
 	
 	
